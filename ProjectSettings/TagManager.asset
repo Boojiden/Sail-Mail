@@ -3,17 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Knockable
+  - Objective
+  - Package
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Override
   - Water
   - UI
-  - 
-  - 
-  - 
+  - isGround
+  - Knockable
+  - Player
   - 
   - 
   - 
@@ -40,4 +43,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 2900064213
+    locked: 0
+  - name: Enim
+    uniqueID: 877557069
+    locked: 0
+  - name: Particle
+    uniqueID: 3679433811
+    locked: 0
+  - name: Player
+    uniqueID: 594001911
+    locked: 0
+  - name: UI
+    uniqueID: 296104553
     locked: 0
