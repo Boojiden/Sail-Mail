@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Objective : MonoBehaviour
 {
-    //public GameObject effect;
-    private bool collected = false;
+    public GameObject effect;
+    public GameObject sound;
     private SpriteRenderer sr;
 
     private void Start()
@@ -14,13 +14,7 @@ public class Objective : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && collected == false)
-        {
-            //Instantiate(effect, transform.position, Quaternion.identity);
-            GameMaster.Instance.tickObjs();
-            collected = true;
-        }
-        else if (collision.gameObject.CompareTag("Package"))
+        if (collision.gameObject.CompareTag("Package"))
         {
             var package = collision.gameObject.GetComponent<Package>();
             Debug.Log("1");
@@ -30,6 +24,8 @@ public class Objective : MonoBehaviour
                 GameMaster.Instance.tickObjs();
                 package.collected = true;
                 Destroy(collision.gameObject);
+                Instantiate(sound);
+                Instantiate(effect, transform.position, Quaternion.identity);
             }
         }
     }

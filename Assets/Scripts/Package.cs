@@ -24,12 +24,4 @@ public class Package : MonoBehaviour
         yield return new WaitForSeconds(delay);
         gameObject.layer = LayerMask.NameToLayer("Default");
     }
-
-    private void OnDestroy()
-    {
-        if (!collected)
-        {
-            GameMaster.Instance.onLevelLose();
-        }
-    }
 }

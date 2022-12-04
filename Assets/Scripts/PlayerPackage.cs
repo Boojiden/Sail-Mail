@@ -46,6 +46,10 @@ public class PlayerPackage : MonoBehaviour
 
     public void setPackage(GameObject obj)
     {
+        if(current != null)
+        {
+            dropPackage();
+        }
         obj.GetComponent<Rigidbody2D>().simulated = false;
         obj.transform.SetParent(transform, true);
         obj.transform.rotation = Quaternion.identity;
@@ -64,6 +68,19 @@ public class PlayerPackage : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 diff = (mousePos - (Vector2)transform.position).normalized;
         rb.velocity = diff * throwForce;
+        current = null;
+        hasPackage = false;
+    }
+
+    public void dropPackage()
+    {
+        current.transform.SetParent(null);
+        var rb = current.GetComponent<Rigidbody2D>();
+        current.GetComponent<Package>().disableCollisions(1f);
+        rb.simulated = true;
+        current.transform.position = transform.position;
+        rb.velocity = Vector2.up * (throwForce);
+        rb.AddTorque(Random.Range(0, throwForce));
         current = null;
         hasPackage = false;
     }

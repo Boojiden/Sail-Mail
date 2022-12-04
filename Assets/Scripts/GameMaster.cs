@@ -11,6 +11,7 @@ public class GameMaster : MonoBehaviour
     public Transform spawnPoint;
     public List<GameObject> WinPanel;
     public List<GameObject> LosePanel;
+    public GameObject loseSound;
     public static float currentTime = 0;
     public static int currentLevel = 0;
     public static int maxLevel;
@@ -75,8 +76,10 @@ public class GameMaster : MonoBehaviour
         Destroy(PlayerHealth.player);
         foreach (GameObject go in LosePanel)
         {
+            if(Camera.main.gameObject != null)
             Instantiate(go).transform.SetParent(Camera.main.transform.GetChild(0), false);
         }
+        Instantiate(loseSound);
     }
     public static int getNextLevel()
     {

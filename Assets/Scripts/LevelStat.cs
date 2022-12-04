@@ -92,6 +92,11 @@ public class LevelStat : MonoBehaviour
                 File.Delete(Application.persistentDataPath + "/" + name + ".lvl");
             }
         }
+
+        if (File.Exists(Application.persistentDataPath + "/PlayerBuff.plr"))
+        {
+            File.Delete(Application.persistentDataPath + "/PlayerBuff.plr");
+        }
     }
 }
 [System.Serializable]

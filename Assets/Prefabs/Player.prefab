@@ -222,11 +222,11 @@ MonoBehaviour:
   fallSpeed: 15
   jumpHeight: 8
   linearDrag: 6
-  maxAngleWalk: 40
+  maxAngleWalk: 50
   ground:
     serializedVersion: 2
     m_Bits: 64
-  groundLength: 0.6
+  groundLength: 0.7
   groundSpace: 4
   noFric: {fileID: 6200000, guid: b7785583b6023bd46940ca7a7e268166, type: 2}
   Fric: {fileID: 6200000, guid: df4ba21959c500348a6af46449107ef1, type: 2}
@@ -245,11 +245,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boost: {fileID: 1597841067398289842, guid: 5fafe68f6ef31154daaf1303d08e5bf9, type: 3}
+  effect: {fileID: 5142062472004917073, guid: 9a38aae349049c946bad977edab4cc19, type: 3}
+  sound: {fileID: 1894231102616313792, guid: 5feaf431071d9a8479f513370ce53695, type: 3}
+  offset: 1
   fireRate: 1.2
   range: 3
+  boostChargeBonus: 2
+  chargeTick: 0.5
   hits:
     serializedVersion: 2
     m_Bits: 64
+  currentCharge: 0
 --- !u!114 &-7559944377797004686
 MonoBehaviour:
   m_ObjectHideFlags: 0

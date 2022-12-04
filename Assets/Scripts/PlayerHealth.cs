@@ -21,28 +21,19 @@ public class PlayerHealth : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         player = gameObject;
         healthCurrent = healthMax;
+
+
     }
 
-
-    
-    public void onHurt(int damage)
+    public void disableCollisions(float delay)
     {
-        if (canBeHit)
-        {
-            StartCoroutine(hurt(damage));
-        }
+        gameObject.tag = "Untagged";
+        StartCoroutine(EnableCollision(delay));
     }
 
-    private IEnumerator hurt(int damage)
+    private IEnumerator EnableCollision(float delay)
     {
-        canBeHit = false;
-        healthCurrent -= damage;
-        if(healthCurrent <= 0)
-        {
-            GameMaster.Instance.onLevelLose();
-        }
-        yield return new WaitForSeconds(invuln);
-        canBeHit = true;
+        yield return new WaitForSeconds(0.1f);
+        gameObject.tag = "Player";
     }
-
 }

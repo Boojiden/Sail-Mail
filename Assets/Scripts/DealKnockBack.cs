@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DealKnockBack : MonoBehaviour
 {
-    [SerializeField] private float Force;
+    public float Force;
     [SerializeField] private float xModifier = 1;
     [SerializeField] private float yModifier = 1;
     private void OnTriggerEnter2D(Collider2D collision)

@@ -43,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
     public bool isOnSlope;
     public bool canWalkOnSlope;
-    private float slopeCheckDistance = 0.1f;
     private Vector2 slopeNormalPerp;
     private Vector2 slopeCheckPerp;
     public Rigidbody2D rb { get; private set; }
@@ -76,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void checkSlope()
     {
-        Vector2 checkPos = (Vector2)transform.position - new Vector2(0, cap.size.y / 4);
+        Vector2 checkPos = (Vector2)transform.position -  new Vector2(0, cap.size.y / 5);
 
         checkVertical(checkPos);
         checkWalk(checkPos);
@@ -84,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void checkWalk(Vector2 checkPos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.right * Mathf.Sign(dir), slopeCheckDistance, ground);
+        RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.right * Mathf.Sign(dir), groundLength, ground);
         if (hit)
         {
             isOnSlope = true;
@@ -100,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void checkVertical(Vector2 checkPos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.down, slopeCheckDistance, ground);
+        RaycastHit2D hit = Physics2D.Raycast(checkPos, -transform.up, groundLength, ground);
         float slopeDownAngle = 0f;
         if (hit)
         {
@@ -188,18 +187,22 @@ public class PlayerMovement : MonoBehaviour
     public void doMovement()
     {
         bool changedir = Mathf.Sign(rb.velocity.x) != Mathf.Sign(dir);
-        Vector2 newForce = new Vector2(dir * accel, 0f);
+        var direction = dir;
+        if (!onGround)
+        {
+            direction *= 0.5f;
+        }
+        Vector2 newForce = new Vector2(direction * accel, 0f);
+        if (isOnSlope && canWalkOnSlope && onGround)
+        {
+            newForce.Set(accel * slopeNormalPerp.x * -direction, accel * slopeNormalPerp.y * -direction);
+        }
         if (rb.velocity.x > maxSpeed || rb.velocity.x < -maxSpeed)
         {
             if (changedir)
             {
                 rb.AddForce(newForce);
             }
-        }
-        else if(isOnSlope && canWalkOnSlope && onGround)
-        {
-            newForce.Set(accel * slopeNormalPerp.x * -dir, accel * slopeNormalPerp.y * -dir);
-            rb.AddForce(newForce);
         }
         else
         {
@@ -228,6 +231,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y), new Vector3(transform.position.x, transform.position.y - groundLength));
+        //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y), new Vector3(transform.position.x, transform.position.y - groundLength));
     }
 }

@@ -85,4 +85,5 @@ MonoBehaviour:
   - {fileID: 3179188069678402813, guid: b62065ed2a920b14eabccc5fdecf6670, type: 3}
   - {fileID: 7811571581929152457, guid: 8de3347297580b3499439af899949cc3, type: 3}
   - {fileID: 4586967163263061446, guid: 768b740552d7d9e47b0dc1268b6afa73, type: 3}
+  loseSound: {fileID: 1136600295874334276, guid: 00613b3d960f6fc43b69cfe35b625fd9, type: 3}
   objs: 0

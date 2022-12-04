@@ -13,6 +13,7 @@ public class DestroyObj : MonoBehaviour
         else if (collision.gameObject.CompareTag("Package"))
         {
             Destroy(collision.gameObject);
+            GameMaster.Instance.onLevelLose();
         }
     }
 }
