@@ -85,5 +85,13 @@ public class PlayerPackage : MonoBehaviour
         hasPackage = false;
     }
 
-    
+    private void OnDestroy()
+    {
+        if(arrowinstance != null)
+        {
+            Destroy(arrowinstance);
+        }
+    }
+
+
 }

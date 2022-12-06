@@ -7,11 +7,13 @@ public class ButtonFunction : MonoBehaviour
 {
     public GameObject LevelPanel;
     public GameObject ClearPanel;
+    public GameObject CreditsPanel;
 
     private void Start()
     {
         LevelPanel.SetActive(false);
         ClearPanel.SetActive(false);
+        CreditsPanel.SetActive(false);
     }
     public void Open(GameObject panel)
     {

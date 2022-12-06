@@ -28,15 +28,10 @@ public class PlayerMovement : MonoBehaviour
     {
         get { return onGround; }
     }
-    /*
     [Header("Cosmetic")]
-    public ParticleSystem psrun;
-    public ParticleSystem psjumpInAir;
-    public ParticleSystem psWall;
+    public ParticleSystem slide;
 
-    [Header("Audio")]
-    public AudioSource jump;
-    */
+
     private bool canjump;
     private bool onGround;
     private bool isSliding;
@@ -44,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
     public bool isOnSlope;
     public bool canWalkOnSlope;
     private Vector2 slopeNormalPerp;
-    private Vector2 slopeCheckPerp;
     public Rigidbody2D rb { get; private set; }
     //private Animator anim;
     private SpriteRenderer r;
@@ -70,7 +64,6 @@ public class PlayerMovement : MonoBehaviour
         {
             doJump();
         }
-        updateAnims();
     }
 
     private void checkSlope()
@@ -139,51 +132,12 @@ public class PlayerMovement : MonoBehaviour
     public void FixedUpdate()
     {
         doMovement();
-        /*
-        var emit = psrun.emission;
-        if (onGround && absX > 0.2f)
-        { 
-            emit.rateOverDistance = new ParticleSystem.MinMaxCurve(1f);
-        }
-        else
-        {
-            emit.rateOverDistance = new ParticleSystem.MinMaxCurve(0f);
-        }
-        var dust = psWall.emission;
-        if (onWall && absY > 0.2f)
-        {
-            dust.rateOverTime = new ParticleSystem.MinMaxCurve(10f);
-        }
-        else
-        {
-            dust.rateOverTime = new ParticleSystem.MinMaxCurve(0f);
-        }
-        */
     }
 
     public void doJump()
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpHeight);
-        //jump.Play();
     }
-    public void updateAnims()
-    {
-        /*
-        anim.SetFloat("Yvel", rb.velocity.y);
-        anim.SetFloat("Xvel", Mathf.Abs(rb.velocity.x));
-        anim.SetBool("OnGround", onGround);
-        anim.SetBool("OnWall", onWall);
-        */
-        if(dir > 0.1f)
-        {
-            r.flipX = true;
-        }
-        else if(dir < -0.1f)
-        {
-            r.flipX = false;
-        }
-    }
-
     public void doMovement()
     {
         bool changedir = Mathf.Sign(rb.velocity.x) != Mathf.Sign(dir);
@@ -195,9 +149,17 @@ public class PlayerMovement : MonoBehaviour
         Vector2 newForce = new Vector2(direction * accel, 0f);
         if (isOnSlope && canWalkOnSlope && onGround)
         {
+            if(rb.velocity.magnitude < maxSpeed)
             newForce.Set(accel * slopeNormalPerp.x * -direction, accel * slopeNormalPerp.y * -direction);
         }
-        if (rb.velocity.x > maxSpeed || rb.velocity.x < -maxSpeed)
+        if ((rb.velocity.magnitude > maxSpeed || rb.velocity.magnitude < -maxSpeed) && onGround)
+        {
+            if (changedir)
+            {
+                rb.AddForce(newForce);
+            }
+        }
+        else if ((rb.velocity.x > maxSpeed || rb.velocity.x < -maxSpeed) && !onGround)
         {
             if (changedir)
             {
@@ -227,10 +189,34 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.sharedMaterial = noFric;
         }
+
+        if(isSliding && !slide.isPlaying)
+        {
+            slide.Play();
+        }
+        else if(!isSliding && slide.isPlaying)
+        {
+            slide.Stop();
+        }
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         //Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y), new Vector3(transform.position.x, transform.position.y - groundLength));
+    }
+
+    public bool isGrounded()
+    {
+        return onGround;
+    }
+
+    public bool isSlide()
+    {
+        return isSliding;
+    }
+
+    public bool isDirecting()
+    {
+        return Math.Abs(dir) > 0.1f;
     }
 }

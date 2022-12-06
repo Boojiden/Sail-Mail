@@ -7,6 +7,7 @@ public class DoBoost : MonoBehaviour
     public GameObject boost;
     public GameObject effect;
     public GameObject sound;
+    public SpriteRenderer arm;
     public float offset;
     public float fireRate;
     public float range;
@@ -17,12 +18,12 @@ public class DoBoost : MonoBehaviour
     private bool didFire = false;
     [SerializeField] private float currentCharge = 0f;
     private GameObject effectInstance;
-    private Vector3 init = new Vector3(1, 1, 1);
+    private Vector3 init = new Vector3(0.6f, 0.6f, 0.6f);
 
-    private Vector3 mousePos;
+    private Vector2 mousePos;
     void Update()
     {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (!didFire && !PlayerBuff.buffed && Input.GetButtonDown("Fire1"))
         {
             StartCoroutine(doShot());
@@ -35,12 +36,14 @@ public class DoBoost : MonoBehaviour
     private IEnumerator doShot()
     {
         didFire = true;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, (mousePos - transform.position).normalized, range, hits);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, (mousePos - (Vector2)transform.position).normalized, range, hits);
         if (hit)
         {
             Instantiate(boost, hit.point, Quaternion.identity);
             Instantiate(sound);
         }
+        arm.color = Color.red;
+        StartCoroutine(fireDelayColor());
         yield return new WaitForSeconds(1/fireRate);
         didFire = false;
     }
@@ -48,10 +51,10 @@ public class DoBoost : MonoBehaviour
     private IEnumerator doChargeShot()
     {
         didFire = true;
-        Vector2 angle = (mousePos - transform.position).normalized;
+        Vector2 angle = (mousePos - (Vector2)transform.position).normalized;
         while (Input.GetButton("Fire1"))
         {
-            angle = (mousePos - transform.position).normalized;
+            angle = (mousePos - (Vector2)transform.position).normalized;
             if (currentCharge < 1f)
             {
                 currentCharge += chargeTick * Time.deltaTime;
@@ -62,7 +65,7 @@ public class DoBoost : MonoBehaviour
             }
             else
             {
-                effectInstance.transform.localScale = init * currentCharge;
+                effectInstance.transform.localScale = (init * currentCharge).x < 0.2f ? new Vector3(0.2f,0.2f,0.2f) : init * currentCharge;
                 effectInstance.transform.position = transform.position + (Vector3)(angle * offset);
             }
             yield return null;
@@ -75,15 +78,28 @@ public class DoBoost : MonoBehaviour
         }
          Destroy(effectInstance);
          currentCharge = 0f;
+         arm.color = Color.red;
+         StartCoroutine(fireDelayColor());
          yield return new WaitForSeconds(1 / fireRate);
          didFire = false;
     }
 
+    private IEnumerator fireDelayColor()
+    {
+        float timeTill = Time.time + (1 / fireRate);
+        //Debug.Log((timeTill - Time.time) + " " + timeTill);
+        while (((timeTill - Time.time)) > 0)
+        {
+            arm.color = Color.Lerp(Color.white, Color.red, (timeTill - Time.time));
+            yield return null;
+        }
+
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Vector2 end = (mousePos - transform.position);
+        Vector2 end = (mousePos - (Vector2)transform.position);
         Gizmos.DrawLine(transform.position, (Vector2)transform.position + end.normalized * range);
     }
 }
